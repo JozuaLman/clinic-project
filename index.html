@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniBook SR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-page" class="page-container">
+        <div class="login-card">
+            <h2>CliniBook <span class="brand-accent">SR</span></h2>
+            <p class="subtitle">Plan afspraken met specialisten</p>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label>📧 Email</label>
+                    <input type="email" id="email-input" required placeholder="naam@email.com">
+                </div>
+                <div class="input-group">
+                    <label>🔒 Wachtwoord</label>
+                    <input type="password" id="password-input" required placeholder="******">
+                </div>
+                <button type="submit" class="btn-login">Inloggen</button>
+            </form>
+            
+            <div class="demo-helper-box">
+                <p><strong>Demo accounts:</strong> patient@email.com / 123456</p>
+                <p>admin@clinic.com / 123456 (dokter)</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        
+        <nav class="navbar">
+            <div class="nav-logo">Book 🩺</div>
+            <div class="nav-links">
+                <button id="nav-dash" class="nav-btn active">📊 Dashboard</button>
+                <button id="nav-afspraak" class="nav-btn">📅 Nieuwe afspraak</button>
+                <button id="nav-admin" class="nav-btn hidden">🛡️ Admin paneel</button>
+            </div>
+            <div class="nav-user">
+                <span id="user-display-name">Gebruiker</span>
+                <button id="btn-logout" class="btn-logout">Uitloggen</button>
+            </div>
+        </nav>
+        
+        <main class="main-content">
+
+            <section id="view-dashboard" class="view-section">
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Mijn Afspraken</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">Vandaag</span>
+                        <span class="stat-label">Laatste Rapport</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Specialisten</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-flex">
+                    
+                    <div class="data-block appointments-block">
+                        <h3>📅 Mijn Afspraken & Status</h3>
+                        <table class="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Specialist</th>
+                                    <th>Datum</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="doc-name">Dr. Amrita Ramdin (Huisarts)</td>
+                                    <td>18-06-2026</td>
+                                    <td><span class="badge badge-success">Goedgekeurd</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="doc-name">Dr. M. Wijngaarde (Gynaecologie)</td>
+                                    <td>24-06-2026</td>
+                                    <td><span class="badge badge-pending">In Afwachting</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="data-block report-block">
+                        <h3>📋 Mijn Doktersrapport</h3>
+                        <div class="report-box">
+                            <h4 id="report-doctor">Dr. Amrita Ramdin</h4>
+                            <span class="report-date">Uitgegeven op: 12-06-2026</span>
+                            <p id="report-text">
+                                "Patiënt vertoont lichte symptomen van vermoeidheid. Bloeddruk is normaal. Geadviseerd om rust te nemen en over twee weken terug te komen voor controle."
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="view-afspraak" class="view-section hidden">
+                <div class="data-block form-block-center">
+                    <h3>📅 Nieuwe afspraak maken</h3>
+                    <form id="appointment-form">
+                        <div class="input-group">
+                            <label>Kies medisch specialist & arts:</label>
+                            <select required>
+                                <option value="">-- Selecteer een specialist --</option>
+                                <option value="cardiologist">🫀 Cardiologie (Dr. S. Karkisokromo)</option>
+                                <option value="dermatologist">🩺 Dermatologie / Huidarts (Dr. S. van Dijk)</option>
+                                <option value="gynecologist">👶 Gynaecologie (Dr. M. Wijngaarde)</option>
+                                <option value="gp">🏥 Huisarts / Algemene Geneeskunde (Dr. Amrita Ramdin)</option>
+                                <option value="dentist">🦷 Tandarts (Dr. Michael Cairo)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Datum:</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Wat is de reden van uw bezoek? (Klachten):</label>
+                            <textarea rows="4" placeholder="Beschrijf hier kort uw symptomen of de reden voor de afspraak..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-login">Afspraak bevestigen</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="view-admin" class="view-section hidden">
+                <div class="data-block">
+                    <h3>🛡️ Dokters Paneel - Binnenkomende Aanvragen</h3>
+                    
+                    <table class="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>Patiënt</th>
+                                <th>Specialist</th>
+                                <th>Datum</th>
+                                <th>Klacht / Reden van bezoek</th>
+                                <th>Actie</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="doc-name">Lisa Patiënt</td>
+                                =<td>👶 Gynaecologie</td>
+                                <td>24-06-2026</td>
+                                <td><em style="color: #64748b;">"Ik wil graag een reguliere controle inplannen."</em></td>
+                                <td>
+                                    <button class="btn-action btn-approve">✓ Accepteren</button>
+                                    <button class="btn-action btn-reject">✗ Weigeren</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

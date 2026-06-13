@@ -1,0 +1,510 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f3f4f6;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.brand-accent { color: #115e59; }
+
+.input-group {
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #115e59;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.navbar {
+    background-color: #114e4a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+.nav-btn {
+    background: transparent;
+    color: #cbd5e1; /* Subtle silver/gray text */
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 20px; /* Pill shape matching the logout button */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+/* What happens when you hover over a tab */
+.nav-btn:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1); /* Soft transparent highlight */
+}
+
+/* The active tab (the page you are currently viewing) */
+.nav-btn.active {
+    background-color: #1f2937; /* Dark slate gray background */
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tiny bounce physical click effect when you press down */
+.nav-btn:active {
+    transform: scale(0.96);
+}
+
+/* ==================== UPGRADED OUTLOGGEN BUTTON ==================== */
+.btn-logout {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.6); /* Semi-transparent white border */
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 20px; /* Gives it that smooth, pill-shaped roundness */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Smooth transition effect on hover */
+}
+
+/* What happens when you hover over it */
+.btn-logout:hover {
+    background-color: #ffffff;
+    color: #114e4a; /* Flips the text color to matching dark teal */
+    border-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Adds a subtle glow */
+}
+
+/* What happens when you physically click it */
+.btn-logout:active {
+    transform: scale(0.95); /* Tiny shrink effect so it feels like a real button click */
+}
+
+/* ==================== GLOBAL BASE RESET ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+body {
+    background-color: #f3f4f6;
+    color: #1e293b;
+}
+
+.hidden {
+    display: none !important;
+}
+
+main.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* ==================== LOGIN PROFILE CARD ==================== */
+#login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.brand-accent { 
+    color: #115e59; 
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.demo-helper-box {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    background: #f8fafc;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
+    text-align: left;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* ==================== FORM ELEMENTS & INPUT CONTROLS ==================== */
+.input-group {
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.input-group input, 
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: #334155;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    resize: vertical;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-group input:focus, 
+.input-group select:focus,
+.input-group textarea:focus {
+    border-color: #115e59;
+    box-shadow: 0 0 0 3px rgba(17, 94, 89, 0.15);
+    background-color: #fafafa;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #115e59;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.btn-login:hover {
+    background-color: #134e4a;
+}
+
+/* ==================== GLOBAL HEADER NAVBAR ==================== */
+.navbar {
+    background-color: #114e4a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.nav-logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    background: transparent;
+    color: #cbd5e1;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-btn:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn.active {
+    background-color: #1f2937;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-btn:active {
+    transform: scale(0.96);
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+#user-display-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-logout {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-logout:hover {
+    background-color: #ffffff;
+    color: #114e4a;
+    border-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-logout:active {
+    transform: scale(0.95);
+}
+
+/* ==================== SYSTEM APP GRIDS & PANELS ==================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #115e59;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.dashboard-flex {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.data-block {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.appointments-block {
+    flex: 2;
+    min-width: 350px;
+}
+
+.report-block {
+    flex: 1;
+    min-width: 280px;
+}
+
+.form-block-center {
+    max-width: 500px;
+    margin: 2rem auto 0 auto;
+}
+
+/* ==================== APPOINTMENTS LIST TABLE ==================== */
+.appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.appointments-table th {
+    color: #64748b;
+    font-size: 0.85rem;
+    padding: 0.75rem 0;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.appointments-table td {
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.appointments-table td.doc-name {
+    font-weight: 500;
+}
+
+/* ==================== DIAGNOSTIC REPORT CONTENT ==================== */
+.report-box {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #115e59;
+    margin-top: 1rem;
+}
+
+.report-box h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    color: #0f172a;
+}
+
+.report-date {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.report-box p {
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.empty-state-text {
+    color: #6b7280;
+    padding: 2rem 0;
+}
+
+/* ==================== INTERACTIVE STATUS BADGES ==================== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.badge-success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge-pending {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* ==================== DOCTOR ADMIN PANEL STYLES ==================== */
+.patient-complaint {
+    font-style: italic;
+    color: #64748b;
+}
+
+/* DOCTOR ACTION BUTTONS */
+.btn-action {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: transform 0.1s ease;
+}
+
+.btn-action:active {
+    transform: scale(0.95);
+}
+
+.btn-approve {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.btn-approve:hover {
+    background-color: #bbf7d0;
+}
+
+.btn-reject {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.btn-reject:hover {
+    background-color: #fecaca;
+}

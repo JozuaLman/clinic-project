@@ -16,11 +16,11 @@ const pool = mysql.createPool({
 
 pool.getConnection()
   .then(connection => {
-    console.log(`✅ Database connected successfully on port ${process.env.DB_PORT || 3307}`);
+    console.log(` Database connected successfully on port ${process.env.DB_PORT || 3307}`);
     connection.release();
   })
   .catch(err => {
-    console.error('❌ Database connection failed:', err.message);
+    console.error(' Database connection failed:', err.message);
   });
 
 export default pool;

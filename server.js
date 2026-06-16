@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import pool from './config/db.js';
 
 // Snel aanpassen naar jouw import-stijl:
 import appointmentRoutes from './routes/appointments.js'; 

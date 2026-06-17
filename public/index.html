@@ -32,141 +32,120 @@
         </div>
     </div>
 
-    <div id="app-container" class="hidden">
+    <div id="app-container">
         
-        <nav class="navbar">
+       <nav class="navbar">
             <div class="nav-logo">Book 🩺</div>
-            <div class="nav-links">
-                <button id="nav-dash" class="nav-btn active">📊 Dashboard</button>
-                <button id="nav-afspraak" class="nav-btn">📅 Nieuwe afspraak</button>
-                <button id="nav-admin" class="nav-btn hidden">🛡️ Admin paneel</button>
-            </div>
-            <div class="nav-user">
-                <span id="user-display-name">Gebruiker</span>
-                <button id="btn-logout" class="btn-logout">Uitloggen</button>
+            
+            <div class="menu-container">
+                <button id="menu-toggle-btn" class="menu-toggle-btn">☰ Menu</button>
+                
+                <div id="dropdown-menu" class="dropdown-content class-hidden">
+                    <button id="nav-dash" class="nav-btn">Dashboard</button>
+
+                    <button id="nav-afspraak" class="nav-btn">Nieuwe afspraak</button>
+                    <button id="nav-chat" class="nav-btn">Contact Arts</button>
+                    <button id="nav-recepten" class="nav-btn">Dossier & Recepten</button>
+                    <button id="nav-notificaties" class="nav-btn">Notificatie Voorkeuren</button>
+
+                    <button id="nav-admin" class="nav-btn class-hidden">Admin paneel</button>
+                    <button id="nav-polibeheer" class="nav-btn class-hidden">Beheer Poli & Artsen</button>
+                    
+                    <hr class="menu-divider">
+                    <div class="nav-user-dropdown">
+                        <span id="user-display-name">Gebruiker</span>
+                        <button id="btn-logout" class="nav-btn logout-btn">Uitloggen</button>
+                    </div>
+                </div>
             </div>
         </nav>
         
-        <main class="main-content">
+        
+    <main class="main-content">
+    <section id="view-dashboard" class="view-section">
+       <h2 class="welcome-text">Welkom terug, Lisa! 👋</h2>
+<p class="subtitle-text">Hier is een overzicht van uw medische status en aankomende consulten.</p>
 
-            <section id="view-dashboard" class="view-section">
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number">2</span>
-                        <span class="stat-label">Mijn Afspraken</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">Vandaag</span>
-                        <span class="stat-label">Laatste Rapport</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">5</span>
-                        <span class="stat-label">Specialisten</span>
-                    </div>
-                </div>
-
-                <div class="dashboard-flex">
-                    
-                    <div class="data-block appointments-block">
-                        <h3>📅 Mijn Afspraken & Status</h3>
-                        <table class="appointments-table">
-                            <thead>
-                                <tr>
-                                    <th>Specialist</th>
-                                    <th>Datum</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="doc-name">Dr. Amrita Ramdin (Huisarts)</td>
-                                    <td>18-06-2026</td>
-                                    <td><span class="badge badge-success">Goedgekeurd</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="doc-name">Dr. M. Wijngaarde (Gynaecologie)</td>
-                                    <td>24-06-2026</td>
-                                    <td><span class="badge badge-pending">In Afwachting</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="data-block report-block">
-                        <h3>📋 Mijn Doktersrapport</h3>
-                        <div class="report-box">
-                            <h4 id="report-doctor">Dr. Amrita Ramdin</h4>
-                            <span class="report-date">Uitgegeven op: 12-06-2026</span>
-                            <p id="report-text">
-                                "Patiënt vertoont lichte symptomen van vermoeidheid. Bloeddruk is normaal. Geadviseerd om rust te nemen en over twee weken terug te komen voor controle."
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="view-afspraak" class="view-section hidden">
-                <div class="data-block form-block-center">
-                    <h3>📅 Nieuwe afspraak maken</h3>
-                    <form id="appointment-form">
-                        <div class="input-group">
-                            <label>Kies medisch specialist & arts:</label>
-                            <select required>
-                                <option value="">-- Selecteer een specialist --</option>
-                                <option value="cardiologist">🫀 Cardiologie (Dr. S. Karkisokromo)</option>
-                                <option value="dermatologist">🩺 Dermatologie / Huidarts (Dr. S. van Dijk)</option>
-                                <option value="gynecologist">👶 Gynaecologie (Dr. M. Wijngaarde)</option>
-                                <option value="gp">🏥 Huisarts / Algemene Geneeskunde (Dr. Amrita Ramdin)</option>
-                                <option value="dentist">🦷 Tandarts (Dr. Michael Cairo)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>Datum:</label>
-                            <input type="date" required>
-                        </div>
-                        <div class="input-group">
-                            <label>Wat is de reden van uw bezoek? (Klachten):</label>
-                            <textarea rows="4" placeholder="Beschrijf hier kort uw symptomen of de reden voor de afspraak..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn-login">Afspraak bevestigen</button>
-                    </form>
-                </div>
-            </section>
-
-            <section id="view-admin" class="view-section hidden">
-                <div class="data-block">
-                    <h3>🛡️ Dokters Paneel - Binnenkomende Aanvragen</h3>
-                    
-                    <table class="appointments-table">
-                        <thead>
-                            <tr>
-                                <th>Patiënt</th>
-                                <th>Specialist</th>
-                                <th>Datum</th>
-                                <th>Klacht / Reden van bezoek</th>
-                                <th>Actie</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="doc-name">Lisa Patiënt</td>
-                                =<td>👶 Gynaecologie</td>
-                                <td>24-06-2026</td>
-                                <td><em style="color: #64748b;">"Ik wil graag een reguliere controle inplannen."</em></td>
-                                <td>
-                                    <button class="btn-action btn-approve">✓ Accepteren</button>
-                                    <button class="btn-action btn-reject">✗ Weigeren</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
+<div class="stat-grid">
+    <div class="stat-card">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Mijn Afspraken</span>
     </div>
+    <div class="stat-card">
+        <span class="stat-number" style="color: #ef4444;">2</span>
+        <span class="stat-label">Actieve Recepten</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">5</span>
+        <span class="stat-label">Medische Poli's</span>
+    </div>
+</div>
+
+<div class="dashboard-flex" style="display: flex; gap: 20px; margin-top: 30px;">
+    <div class="data-block" style="flex: 1;">
+        <h3>📋 Mijn Medische Tijdlijn</h3>
+        <p class="subtitle-text">Een chronologisch overzicht van uw afspraken, rapporten en recepten.</p>
+        
+        <table class="appointments-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Specialist / Poli</th>
+                    <th>Datum & Tijd</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-pending">In Afwachting</span></td>
+                    <td>Dr. Michael Cairo (Tandarts)</td>
+                    <td>10 november 2026 om 09:00</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-success">Goedgekeurd</span></td>
+                    <td>Dr. M. Wijngaarde (Gynaecologie)</td>
+                    <td>23 juni 2026 om 13:00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </section>
+
+   <section id="view-afspraak" class="view-section class-hidden">
+    <h2>📆 Nieuwe Afspraak</h2>
+    <p>Hier komt binnenkort het afsprakenformulier!</p>
+</section>
+
+<section id="view-chat" class="view-section class-hidden">
+    <h2>💬 Contact Arts</h2>
+    <p>Hier komt binnenkort het chatsysteem!</p>
+</section>
+
+<section id="view-recepten" class="view-section class-hidden">
+    <h2>📋 Dossier & Recepten</h2>
+    <p>Hier komen jouw medische recepten te staan.</p>
+</section>
+
+<section id="view-notificaties" class="view-section class-hidden">
+    <h2>🔔 Notificatie Voorkeuren</h2>
+    <p>Beheer hier hoe je meldingen wilt ontvangen.</p>
+</section>
+
+<section id="view-admin-dash" class="view-section class-hidden">
+    <h2>👨‍⚕️ Admin Dashboard</h2>
+    <p>Welkom dokter! Dit is jouw overzicht.</p>
+</section>
+
+<section id="view-recept-schrijven" class="view-section class-hidden">
+    <h2>✍️ Recept Schrijven</h2>
+    <p>Schrijf hier een nieuw recept uit voor een patiënt.</p>
+</section>
+
+<section id="view-beheer" class="view-section class-hidden">
+    <h2>⚙️ Beheer Poli & Artsen</h2>
+    <p>Beheeromgeving voor de polikliniek.</p>
+</section>
+</main>
 
     <script src="script.js"></script>
 </body>

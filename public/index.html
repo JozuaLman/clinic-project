@@ -233,24 +233,166 @@
         </div>
 </section>
 
-<section id="view-afspraken-lijst" class="view-section class-hidden">
-    <div class="page-container">
-        <h2>📅 Afsprakenlijst</h2>
-        <p>Beheer patiëntafspraken (Accepteren / Weigeren).</p>
+<section id="view-arts-dashboard" class="view-section class-hidden">
+    <div class="dashboard-header">
+        <h2>Welkom terug, dr. Alberts</h2>
+        <p>Hier is uw overzicht voor vandaag.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <div class="stat-info">
+                <h3>3</h3>
+                <p>Afspraken Vandaag</p>
+            </div>
         </div>
+        <div class="stat-card">
+            <span class="stat-icon">👥</span>
+            <div class="stat-info">
+                <h3>1.240</h3>
+                <p>Totaal Patiënten</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📝</span>
+            <div class="stat-info">
+                <h3>5</h3>
+                <p>Openstaande Recepten</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-content-box">
+        <h3>Belangrijke Meldingen</h3>
+        <ul class="notification-list">
+            <li>🔔 Patiënt <strong>Lisa</strong> heeft een vraag gesteld via de CoPilot chat.</li>
+            <li>⚠️ Labuitslagen voor patiënt #49202 zijn binnengekomen.</li>
+        </ul>
+    </div>
+</section>
+
+<section id="view-afspraken-lijst" class="view-section class-hidden">
+    <div class="section-header">
+        <h2>Uw Afsprakenagenda</h2>
+        <p>Overzicht van de consulten voor vandaag.</p>
+    </div>
+
+    <div class="table-container">
+        <table class="med-table">
+            <thead>
+                <tr>
+                    <th>Tijd</th>
+                    <th>Patiënt</th>
+                    <th>Type Consult</th>
+                    <th>Status</th>
+                    <th>Actie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>09:00</strong></td>
+                    <td>Mevr. J. De Vries</td>
+                    <td>Eerste consult</td>
+                    <td><span class="badge badge-done">Afgerond</span></td>
+                    <td><button class="btn-small">Inzien</button></td>
+                </tr>
+                <tr>
+                    <td><strong>11:30</strong></td>
+                    <td>Dhr. R. Somopawiro</td>
+                    <td>Controle</td>
+                    <td><span class="badge badge-done">Afgerond</span></td>
+                    <td><button class="btn-small">Inzien</button></td>
+                </tr>
+                <tr>
+                    <td><strong>16:00</strong></td>
+                    <td>Mevr. Lisa</td>
+                    <td>Vervolgconsult</td>
+                    <td><span class="badge badge-pending">Wachtend</span></td>
+                    <td><button class="btn-small btn-primary" onclick="switchView('view-chat')">Start Chat</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 
 <section id="view-dossiers-recepten" class="view-section class-hidden">
-    <div class="page-container">
-        <h2>📝 Dossiers & Recepten</h2>
-        <p>Schrijf medische notities en schrijf medicatie voor.</p>
+    <div class="section-header">
+        <h2>Patiëntendossiers & Recepten</h2>
+        <p>Beheer medische gegevens en schrijf medicatie voor.</p>
+    </div>
+
+    <div class="split-view">
+        <div class="content-box form-box">
+            <h3>Nieuw Recept Uitschrijven</h3>
+            <form id="recipe-form" onsubmit="event.preventDefault(); alert('Recept succesvol verzonden naar de apotheek!'); this.reset();">
+                <div class="form-group">
+                    <label for="recipe-patient">Patiënt Selecteren</label>
+                    <select id="recipe-patient" required>
+                        <option value="lisa">Lisa (ID: #49202)</option>
+                        <option value="devries">J. De Vries (ID: #48101)</option>
+                        <option value="somopawiro">R. Somopawiro (ID: #47302)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="recipe-med">Medicatie</label>
+                    <input type="text" id="recipe-med" placeholder="Bijv. Paracetamol 500mg" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipe-usage">Dosering & Gebruik</label>
+                    <textarea id="recipe-usage" rows="3" placeholder="Bijv. 3 daags 1-2 tabletten voor 5 dagen" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Recept Verzenden</button>
+            </form>
+        </div>
+
+        <div class="content-box active-dossier">
+            <h3>Actief Dossier: Lisa</h3>
+            <div class="dossier-summary">
+                <p><strong>Geboortedatum:</strong> 14-08-1994</p>
+                <p><strong>Diagnose:</strong> Chronische spanningshoofdpijn</p>
+                <p><strong>Allergieën:</strong> Geen bekend</p>
+                <hr>
+                <h4>Medicatie Historie</h4>
+                <ul>
+                    <li>Ibuporfen 400mg (Stopgezet)</li>
+                    <li>Amitriptyline 10mg (Actueel sinds vorige week)</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </section>
 
 <section id="view-beheer" class="view-section class-hidden">
-    <div class="page-container">
-        <h2>⚙️ Poli & Arts Beheer</h2>
-        <p>Voeg nieuwe specialismen of artsen toe aan het systeem.</p>
+    <div class="section-header">
+        <h2>Poli & Arts Beheer</h2>
+        <p>Beheerderspaneel voor de instellingen van Polimed.</p>
+    </div>
+
+    <div class="management-grid">
+        <div class="content-box">
+            <h3>Polikliniek Status</h3>
+            <div class="status-toggle-box">
+                <p>Huidige status: <span class="badge badge-done">Geopend</span></p>
+                <p><strong>Locatie:</strong> Paramaribo, Suriname</p>
+                <p><strong>Openingstijden:</strong> 07:00 - 15:00 uur</p>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <h3>Nieuwe Arts / Specialist Registreren</h3>
+            <form onsubmit="event.preventDefault(); alert('Nieuwe specialist succesvol toegevoegd aan het Polimed systeem!'); this.reset();">
+                <div class="form-group">
+                    <label>Volledige Naam</label>
+                    <input type="text" placeholder="Bijv. Dr. S. Radhakishun" required>
+                </div>
+                <div class="form-group">
+                    <label>Specialisme</label>
+                    <input type="text" placeholder="Bijv. Dermatologie" required>
+                </div>
+                <button type="submit" class="btn-submit">Specialist Toevoegen</button>
+            </form>
+        </div>
     </div>
 </section>
     </main>

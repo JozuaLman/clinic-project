@@ -141,41 +141,27 @@
             </div>
         </section>
 
-        <section id="view-chat" class="view-section class-hidden">
-    <div class="page-container">
-        <div class="page-header">
-            <h2>💬 Mijn Behandelaren</h2>
-            <p>Kies een dokter om contact op te nemen.</p>
-        </div>
-
-        <div class="chat-layout">
-            <div class="chat-sidebar">
-                <div class="doctor-card">
-                    <strong>Dr. Amrita Ramdin</strong>
-                    <p>Huisarts • Polikliniek</p>
-                </div>
-                <div class="doctor-card">
-                    <strong>Dr. S. Karkisokromo</strong>
-                    <p>Cardiologie • Polikliniek</p>
-                </div>
-                <div class="doctor-card">
-                    <strong>Dr. S. van Dijk</strong>
-                    <p>Dermatologie • Polikliniek</p>
-                </div>
-                <div class="doctor-card">
-                    <strong>Dr. M. Wijngaarde</strong>
-                    <p>Gynaecologie • Polikliniek</p>
-                </div>
-            </div>
-
-            <div class="chat-main">
-                <div class="chat-placeholder">
-                    <div class="chat-icon">💬</div>
-                    <h3>Selecteer een medisch specialist</h3>
-                    <p>Kies een arts aan de linkerkant om de chat te openen, te bellen of vragen in te dienen.</p>
-                </div>
+      <section id="view-chat" class="view-section class-hidden">
+    <div class="ai-chat-container">
+        <div class="ai-chat-header">
+            <div class="ai-avatar">🤖</div>
+            <div class="ai-status-info">
+                <h3>PoliMed AI Assistent</h3>
+                <span class="status-ai">Online | Virtuele Zorgbegeleider</span>
             </div>
         </div>
+
+        <div class="ai-chat-messages" id="ai-messages-box">
+            <div class="message message-other">
+                <p><strong>PoliMed AI:</strong><br>Hallo! Ik ben jouw virtuele assistent. Waar heb je vandaag last van of welke medische vraag heb je? (Let op: bel bij spoed altijd 112!)</p>
+                <span class="message-time">Zojuist</span>
+            </div>
+        </div>
+
+        <form class="ai-chat-input-area" id="ai-chat-form">
+            <input type="text" id="ai-input-field" placeholder="Typ je symptomen of vraag hier..." autocomplete="off" required>
+            <button type="submit" id="btn-send-ai">✨</button>
+        </form>
     </div>
 </section>
 
@@ -270,5 +256,6 @@
     </main>
 
     <script src="script.js"></script>
+    <script src="chat.js"></script>
 </body>
 </html>

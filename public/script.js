@@ -44,20 +44,22 @@ document.addEventListener("DOMContentLoaded", () => {
 function showMenuFor(role) {
     const menu = document.getElementById('dropdown-menu');
     
-    if (role === 'arts') {
-        menu.innerHTML = `
-            <button onclick="switchView('view-arts-dashboard')">Dashboard</button>
-            <button onclick="switchView('view-afspraken-lijst')">Afsprakenlijst</button>
-            <button onclick="switchView('view-dossiers-recepten')">Dossiers & Recepten</button>
-            <button onclick="switchView('view-beheer')">Poli & Arts Beheer</button>
-            <hr>
-            <button onclick="logout()">Uitloggen</button>
-        `;
+   if (role === 'arts') {
+            menu.innerHTML = `
+                <button onclick="switchView('view-arts-dashboard')">Dashboard</button>
+                <button onclick="switchView('view-afspraken-lijst')">Afsprakenlijst</button>
+                <button onclick="switchView('view-dossiers-recepten')">Dossiers & Recepten</button>
+                <button onclick="switchView('view-chat')">PoliMed AI CoPilot</button>
+                <button onclick="switchView('view-beheer')">Poli & Arts Beheer</button>
+                <hr>
+                <button onclick="logout()">Uitloggen</button>
+            `;
+        
     } else {
         menu.innerHTML = `
             <button onclick="switchView('view-dashboard')">Mijn Dossier</button>
             <button onclick="switchView('view-afspraak')">Nieuwe Afspraak</button>
-            <button onclick="switchView('view-chat')">Contact Arts</button>
+            <button onclick="switchView('view-chat')">PoliMed AI CoPilots</button>
             <hr>
             <button onclick="logout()">Uitloggen</button>
         `;

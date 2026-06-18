@@ -3,399 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kliniek Patiëntenportaal</title>
+    <title>PoliMed Portaal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<section id="view-login" class="login-container">
-        <div class="login-box">
-            <h2>Systeem Inloggen</h2>
-            <p>PoliMed Patiëntenportaal</p>
-            
+    <section id="view-login" class="login-screen-section">
+        <div class="login-card">
+            <h2>PoliMed Portaal</h2>
+            <p>Log in op uw beveiligde medische omgeving</p>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="login-email">E-mailadres:</label>
-                    <input type="email" id="login-email" required placeholder="patient@email.com">
+                    <label for="login-username">Gebruikersnaam / E-mail</label>
+                    <input type="text" id="login-username" placeholder="Bijv. lisa of dr_ramdin" required>
                 </div>
                 <div class="form-group">
-                    <label for="login-password">Wachtwoord:</label>
-                    <input type="password" id="login-password" required placeholder="••••••••">
+                    <label for="login-password">Wachtwoord</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn-login">Inloggen</button>
+                <div id="login-error-message" class="error-text class-hidden">Onjuiste inloggegevens. Probeer het opnieuw.</div>
+                <button type="submit" class="btn-primary btn-login">Veilig Inloggen</button>
             </form>
-            <div id="login-error" class="error-message class-hidden">Onjuiste inloggegevens.</div>
+            <div class="login-hint">
+                <p><strong>Demo Inloggegevens:</strong><br>
+                   Patiënt: <code>lisa</code> / <code>123</code><br>
+                   Arts: <code>dr_ramdin</code> / <code>123</code>
+                </p>
+            </div>
         </div>
     </section>
 
-    <header id="main-header" class="navbar class-hidden">
-        <div class="nav-container">
-            <h1 class="logo">PoliMed</h1>
-            <button type="button" id="menu-toggle-btn" class="menu-btn">☰ Menu</button>
-        </div>
-
-        <div id="dropdown-menu" class="dropdown-content class-hidden">
-            
-        </div>
-    </header>
-
-
-    <main id="main-content" class="main-content class-hidden">
-
-        <section id="view-dashboard" class="view-section">
-            <div class="dashboard-header">
-                <h2 class="welcome-text">Welkom terug, Lisa!</h2>
-                <p class="subtitle-text">Hier is een actueel overzicht van uw medische status.</p>
+    <div id="app-container" class="class-hidden">
+        
+        <header class="main-header">
+            <div class="logo-container">
+                <span class="logo-text">PoliMed <span class="logo-sub">SR</span></span>
             </div>
             
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <h3>Mijn Afspraken</h3>
-                    <div class="stat-number">3</div>
-                    <p>Eerstvolgende: 25 juni</p>
+            <nav class="nav-actions">
+                <div class="notification-container">
+                    <button id="notification-bell" class="bell-btn" onclick="toggleNotifications()">
+                        🔔 <span class="bell-badge" id="bell-badge-count">1</span>
+                    </button>
+                    <div id="notification-dropdown" class="notification-drop class-hidden">
+                        <h4>Meldingen</h4>
+                        <ul id="notification-list">
+                            <li>Uw actieve status is succesvol bijgewerkt binnen het systeem.</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <h3>Openstaande Recepten</h3>
-                    <div class="stat-number">2</div>
-                    <p>Klaar bij apotheek</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Ongelezen Berichten</h3>
-                    <div class="stat-number">5</div>
-                    <p>Laatste van: Dr. van Dijk</p>
-                </div>
-            </div>
 
-            <div class="dashboard-flex">
-                <div class="dossier-box">
-                    <h3>📋 Recente Medische Tijdslijn</h3>
-                    <table class="dossier-table">
+                <div class="dropdown-menu-wrapper">
+                    <button class="menu-trigger-btn" onclick="toggleMenu()">☰ Menu</button>
+                    <div id="dropdown-menu" class="dropdown-content class-hidden">
+                        </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+
+            <section id="view-patient-dashboard" class="view-section class-hidden">
+                <div class="welcome-banner">
+                    <h2>Welkom terug, Lisa!</h2>
+                    <p>Hier is een overzicht van uw medische status en aankomende consulten.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon">📅</span>
+                        <div class="stat-info"><h3>3</h3><p>Mijn Afspraken</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">💊</span>
+                        <div class="stat-info"><h3>2</h3><p>Actieve Recepten</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">🏥</span>
+                        <div class="stat-info"><h3>AZP</h3><p>Medische Polis</p></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <div class="content-box">
+                        <h3>📅 Mijn Medische Tijdlijn</h3>
+                        <div class="timeline-item pending">
+                            <h4>Consult: Dr. M. Cairo (Tandarts)</h4>
+                            <p class="timeline-date">10 november 2026 om 09:00</p>
+                            <span class="badge badge-pending">In afwachting</span>
+                        </div>
+                        <div class="timeline-item approved">
+                            <h4>Consult: Dr. A. Ramdin (Huisarts)</h4>
+                            <p class="timeline-date">17 juni 2026 om 09:30</p>
+                            <span class="badge badge-approved">Goedgekeurd</span>
+                        </div>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>📋 Beschikbare Recepten (PDF)</h3>
+                        <div class="recipe-download-card">
+                            <h4>Magnesium 400mg & Vitamine B12</h4>
+                            <p>Verzonden naar: Apotheek Self-Reliance</p>
+                            <button class="btn-secondary" style="margin-top: 10px;">📥 Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-patient-afspraken" class="view-section class-hidden">
+                <div class="content-box form-container-box">
+                    <h2>Nieuwe Afspraak Plannen</h2>
+                    <p>Vul de onderstaande gegevens in om een consult aan te vragen.</p>
+                    <form id="appointment-form" onsubmit="event.preventDefault(); alert('Afspraak succesvol aangevraagd!');">
+                        <div class="form-group">
+                            <label>Kies Medische Poli (Afdeling)</label>
+                            <select required>
+                                <option value="">-- Selecteer een poli --</option>
+                                <option value="huisarts">Huisarts / Algemene Geneeskunde</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kies Arts / Specialist</label>
+                            <select required>
+                                <option value="">-- Selecteer een specialist --</option>
+                                <option value="ramdin">Dr. Amrita Ramdin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kies Datum</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Reden van Bezoek & Symptomen</label>
+                            <textarea rows="4" placeholder="Beschrijf hier kort uw klachten..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Afspraak Bevestigen</button>
+                    </form>
+                </div>
+            </section>
+
+
+            <section id="view-arts-dashboard" class="view-section class-hidden">
+                <div class="welcome-banner">
+                    <h2>Medisch Dashboard (Dr. Ramdin)</h2>
+                    <p>Monitoreer poliklinische belastingen en bekijk kliniek statistieken.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info"><h3>2</h3><p>In Afwachting</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info"><h3>1</h3><p>Goedgekeurde Consulten</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info"><h3>5</h3><p>Specialisten Actief</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info"><h3>2</h3><p>Recepten Uitgegeven</p></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <div class="content-box">
+                        <h3>🏥 Belasting per Polikliniek</h3>
+                        <table class="med-table">
+                            <thead>
+                                <tr><th>Polikliniek</th><th>Aantal</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Huisarts</td><td><span class="badge badge-pending">1 afspraak</span></td><td>Actief</td></tr>
+                                <tr><td>Cardiologie</td><td><span class="badge badge-neutral">0 afspraken</span></td><td>Actief</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="content-box">
+                        <h3>👨‍⚕️ Afspraken per Medisch Specialist</h3>
+                        <table class="med-table">
+                            <thead>
+                                <tr><th>Arts</th><th>Specialisme</th><th>Consulten</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Dr. Amrita Ramdin</td><td>Huisarts</td><td>1 consulten</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-arts-binnenkomend" class="view-section class-hidden">
+                <div class="content-box">
+                    <h2>🔔 Binnenkomende Consultaanvragen</h2>
+                    <p>Keur afspraken goed en voeg eventueel direct voorlopige diagnoses toe.</p>
+                    <table class="med-table">
                         <thead>
                             <tr>
-                                <th>Datum</th>
-                                <th>Specialisme</th>
-                                <th>Arts</th>
-                                <th>Status</th>
+                                <th>Patiënt</th>
+                                <th>Datum & Tijd</th>
+                                <th>Symptoom / Klacht</th>
+                                <th>Actie / Beslissing</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>15-06-2026</td>
-                                <td>Cardiologie</td>
-                                <td>Dr. Alberts</td>
-                                <td class="status-done">Afgerond</td>
-                            </tr>
-                            <tr>
-                                <td>25-06-2026</td>
-                                <td>Algemene Polikliniek</td>
-                                <td>Dr. van Dijk</td>
-                                <td class="status-pending">Gepland</td>
-                            </tr>
-                            <tr>
-                                <td>02-07-2026</td>
-                                <td>Dermatologie</td>
-                                <td>Dr. Baas</td>
-                                <td class="status-pending">Gepland</td>
+                                <td><strong>Lisa Patiënt</strong></td>
+                                <td>17 juni 2026 om 09:30</td>
+                                <td>"Lichte symptomen van vermoeidheid en spanningshoofdpijn."</td>
+                                <td>
+                                    <div class="action-btn-group">
+                                        <button class="btn-table btn-approve" onclick="alert('Afspraak succesvol goedgekeurd!')">✓ Goedkeuren</button>
+                                        <button class="btn-table btn-reject" onclick="alert('Afspraak geweigerd.')">✕ Weigeren</button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="view-afspraak" class="view-section class-hidden">
-            <div class="page-container">
-            <div class="page-header">
-                <h2>📆 Nieuwe Afspraak Plannen</h2>
-                <p>Vul de onderstaande gegevens in om een consult aan te vragen.</p>
-            </div>
-            <form id="appointment-form" class="portal-form">
-                <div class="form-group">
-                    <label for="select-specialisme">Kies Specialisme:</label>
-                    <select id="select-specialisme" required>
-                        <option value="">-- Selecteer een specialisme --</option>
-                        <option value="algemeen">Algemene Polikliniek</option>
-                        <option value="cardiologie">Cardiologie</option>
-                        <option value="dermatologie">Dermatologie</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="select-doctor">Kies Arts:</label>
-                    <select id="select-doctor" required>
-                        <option value="">-- Selecteer een arts --</option>
-                        <option value="vandijk">Dr. van Dijk</option>
-                        <option value="alberts">Dr. Alberts</option>
-                        <option value="baas">Dr. Baas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="appointment-date">Voorkeursdatum:</label>
-                    <input type="date" id="appointment-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="appointment-notes">Reden van consult (optioneel):</label>
-                    <textarea id="appointment-notes" rows="4" placeholder="Beschrijf kort uw klachten..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Afspraak Bevestigen</button>
-            </form>
-            </div>
-        </section>
-
-      <section id="view-chat" class="view-section class-hidden">
-    <div class="ai-chat-container">
-        <div class="ai-chat-header">
-            <div class="ai-avatar">🤖</div>
-            <div class="ai-status-info">
-                <h3>PoliMed AI Assistent</h3>
-                <span class="status-ai">Online | Virtuele Zorgbegeleider</span>
-            </div>
-        </div>
-
-        <div class="ai-chat-messages" id="ai-messages-box">
-            <div class="message message-other">
-                <p><strong>PoliMed AI:</strong><br>Hallo! Ik ben jouw virtuele assistent. Waar heb je vandaag last van of welke medische vraag heb je? (Let op: bel bij spoed altijd 112!)</p>
-                <span class="message-time">Zojuist</span>
-            </div>
-        </div>
-
-        <form class="ai-chat-input-area" id="ai-chat-form">
-            <input type="text" id="ai-input-field" placeholder="Typ je symptomen of vraag hier..." autocomplete="off" required>
-            <button type="submit" id="btn-send-ai">✨</button>
-        </form>
-    </div>
-</section>
-
-       <section id="view-recepten" class="view-section class-hidden">
-        <div class="page-container">
-            <div class="page-header">
-                <h2>📋 Mijn Medisch Dossier & Recepten</h2>
-                <p>Een compleet overzicht van uw consultsamenvattingen, diagnoses en voorgeschreven medicatie.</p>
-            </div>
-
-            <div class="recipes-list">
-                
-                <div class="dossier-card">
-                    <div class="dossier-card-header">
-                        <span class="consult-date">📆 15 juni 2026</span>
-                        <span class="consult-doctor">Behandelaar: Dr. Alberts (Cardiologie)</span>
+            <section id="view-arts-recepten" class="view-section class-hidden">
+                <div class="split-view-container">
+                    
+                    <div class="content-box">
+                        <h3>💊 Recept Uitschrijven</h3>
+                        <form id="arts-recipe-form" onsubmit="event.preventDefault(); alert('Recept gekoppeld aan dossier en verzonden!'); this.reset();">
+                            <div class="form-group">
+                                <label>Selecteer Patiënt</label>
+                                <select required>
+                                    <option value="lisa">Lisa Patiënt</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Medicijnnaam + Sterkte</label>
+                                <input type="text" placeholder="Bijv. Paracetamol 500mg" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Dosering / Hoeveelheid</label>
+                                <input type="text" placeholder="Bijv. 3 maal daags 1 tablet" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gebruiksinstructies</label>
+                                <textarea rows="3" placeholder="Bijv. Innemen na de maaltijd."></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Recept Genereren & Opslaan</button>
+                        </form>
                     </div>
-                    <div class="dossier-card-body">
-                        <p><strong>Reden van bezoek:</strong> Periodieke controle na eerdere bloeddrukklachten.</p>
-                        <p><strong>Samenvatting arts:</strong> Patiënt geeft aan minder last te hebben van duizeligheid. Bloeddruk gemeten tijdens consult: 130/85 (stabiel ten opzichte van vorige meting). Hartslag in rust is prima. We zetten de huidige behandeling voort.</p>
-                        
-                        <div class="dossier-meds-block">
-                            <h4>💊 Voorgeschreven Medicatie:</h4>
-                            <ul>
-                                <li><strong>Amoxicilline 500mg</strong> — 3 maal daags 1 tablet (Kuur afmaken)</li>
-                            </ul>
+
+                    <div class="content-box">
+                        <h3>📝 Medisch Dossier Bijwerken</h3>
+                        <form id="dossier-form" onsubmit="event.preventDefault(); alert('Dossier succesvol bijgewerkt!'); this.reset();">
+                            <div class="form-group">
+                                <label>Huidige Bevindingen & Diagnose</label>
+                                <textarea rows="5" placeholder="Voer hier de klinische rapportage en updates in..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Behandelplan</label>
+                                <textarea rows="3" placeholder="Wat zijn de vervolgstappen voor de patiënt?" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary" style="background-color: var(--secondary-color);">Dossier Opslaan</button>
+                        </form>
+                        <div class="dossier-preview-box" style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color);">
+                            <h5>Historie Gekoppelde Recepten binnen dit dossier:</h5>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Zodra het recept links is opgeslagen, verschijnt het automatisch in deze dossier-tijdlijn.</p>
                         </div>
-                        
-                        <p><strong>Advies & Vervolgstappen:</strong> Over 6 weken telefonische afspraak voor controle. Bij acute toename van hoofdpijn direct contact opnemen.</p>
                     </div>
-                    <div class="dossier-card-footer">
-                        <button type="button" class="btn-repeat">Herhalingsaanvraag Recept</button>
-                    </div>
-                </div>
 
-                <div class="dossier-card">
-                    <div class="dossier-card-header">
-                        <span class="consult-date">📆 15 mei 2026</span>
-                        <span class="consult-doctor">Behandelaar: Dr. van Dijk (Algemene Poli)</span>
+                </div>
+            </section>
+
+            <section id="view-arts-beheer" class="view-section class-hidden">
+                <div class="split-view-container">
+                    
+                    <div class="content-box">
+                        <h3>🏢 Nieuwe Polikliniek Toevoegen</h3>
+                        <form onsubmit="event.preventDefault(); alert('Polikliniek succesvol toegevoegd aan het systeem!'); this.reset();">
+                            <div class="form-group">
+                                <label>Polikliniek Naam</label>
+                                <input type="text" placeholder="Bijv. Dermatologie" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Beschrijving</label>
+                                <textarea rows="4" placeholder="Informatie over deze specifieke medische afdeling..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Poli Toevoegen</button>
+                        </form>
                     </div>
-                    <div class="dossier-card-body">
-                        <p><strong>Reden van bezoek:</strong> Aanhoudende spierpijn in de onderrug na sporten.</p>
-                        <p><strong>Samenvatting arts:</strong> Lichte overbelasting van de onderrugspieren geconstateerd. Geen signalen van een hernia of zenuwbeknelling. Mobiliteit is acceptabel maar pijnlijk bij extensie.</p>
-                        
-                        <div class="dossier-meds-block">
-                            <h4>💊 Voorgeschreven Medicatie:</h4>
-                            <ul>
-                                <li><strong>Paracetamol 500mg (Medisch)</strong> — Maximaal 4 maal daags 2 tabletten bij pijn.</li>
-                            </ul>
+
+                    <div class="content-box">
+                        <h3>👨‍⚕️ Nieuwe Arts Toevoegen</h3>
+                        <form onsubmit="event.preventDefault(); alert('Arts succesvol geregistreerd binnen het portaal!'); this.reset();">
+                            <div class="form-group">
+                                <label>Arts Naam</label>
+                                <input type="text" placeholder="Dr. J. Premchand" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Specialisme</label>
+                                <input type="text" placeholder="Cardioloog" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kies Polikliniek</label>
+                                <select required>
+                                    <option value="">-- Kies polikliniek --</option>
+                                    <option value="cardiologie">Cardiologie</option>
+                                    <option value="huisarts">Huisarts</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Arts Toevoegen</button>
+                        </form>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="view-chat" class="view-section class-hidden">
+                <div class="ai-chat-container">
+                    <div class="ai-chat-header">
+                        <div class="ai-avatar">🤖</div>
+                        <div class="ai-status-info">
+                            <h3>PoliMed AI Assistent</h3>
+                            <span class="status-ai">Online | Virtuele Begeleider</span>
                         </div>
-                        
-                        <p><strong>Advies & Vervolgstappen:</strong> Rustig blijven bewegen (wandelen). Indien de klachten over 2 weken niet zijn verminderd, volgt een verwijzing naar de fysiotherapeut.</p>
                     </div>
-                    <div class="dossier-card-footer">
-                        <button type="button" class="btn-repeat" disabled style="background-color: #ccc; cursor: not-allowed;">Geen herhalingen beschikbaar</button>
-                    </div>
+                    <div class="ai-chat-messages" id="ai-messages-box">
+                        </div>
+                    <form class="ai-chat-input-area" id="ai-chat-form">
+                        <input type="text" id="ai-input-field" placeholder="Typ je bericht of vraag hier..." autocomplete="off" required>
+                        <button type="submit" id="btn-send-ai">✨</button>
+                    </form>
                 </div>
+            </section>
 
-            </div>
-        </div>
-        </section>
-        <div id="dropdown-menu" class="class-hidden">
-    
-</div>
-<section id="view-arts-dashboard" class="view-section class-hidden">
-    <div class="page-container">
-        <h2>👨‍⚕️ Dashboard</h2>
-        <p>Overzicht van de komende afspraken voor vandaag.</p>
-        </div>
-</section>
-
-<section id="view-arts-dashboard" class="view-section class-hidden">
-    <div class="dashboard-header">
-        <h2>Welkom terug, dr. Alberts</h2>
-        <p>Hier is uw overzicht voor vandaag.</p>
+        </main>
     </div>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <span class="stat-icon">📅</span>
-            <div class="stat-info">
-                <h3>3</h3>
-                <p>Afspraken Vandaag</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <span class="stat-icon">👥</span>
-            <div class="stat-info">
-                <h3>1.240</h3>
-                <p>Totaal Patiënten</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <span class="stat-icon">📝</span>
-            <div class="stat-info">
-                <h3>5</h3>
-                <p>Openstaande Recepten</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="dashboard-content-box">
-        <h3>Belangrijke Meldingen</h3>
-        <ul class="notification-list">
-            <li>🔔 Patiënt <strong>Lisa</strong> heeft een vraag gesteld via de CoPilot chat.</li>
-            <li>⚠️ Labuitslagen voor patiënt #49202 zijn binnengekomen.</li>
-        </ul>
-    </div>
-</section>
-
-<section id="view-afspraken-lijst" class="view-section class-hidden">
-    <div class="section-header">
-        <h2>Uw Afsprakenagenda</h2>
-        <p>Overzicht van de consulten voor vandaag.</p>
-    </div>
-
-    <div class="table-container">
-        <table class="med-table">
-            <thead>
-                <tr>
-                    <th>Tijd</th>
-                    <th>Patiënt</th>
-                    <th>Type Consult</th>
-                    <th>Status</th>
-                    <th>Actie</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>09:00</strong></td>
-                    <td>Mevr. J. De Vries</td>
-                    <td>Eerste consult</td>
-                    <td><span class="badge badge-done">Afgerond</span></td>
-                    <td><button class="btn-small">Inzien</button></td>
-                </tr>
-                <tr>
-                    <td><strong>11:30</strong></td>
-                    <td>Dhr. R. Somopawiro</td>
-                    <td>Controle</td>
-                    <td><span class="badge badge-done">Afgerond</span></td>
-                    <td><button class="btn-small">Inzien</button></td>
-                </tr>
-                <tr>
-                    <td><strong>16:00</strong></td>
-                    <td>Mevr. Lisa</td>
-                    <td>Vervolgconsult</td>
-                    <td><span class="badge badge-pending">Wachtend</span></td>
-                    <td><button class="btn-small btn-primary" onclick="switchView('view-chat')">Start Chat</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section id="view-dossiers-recepten" class="view-section class-hidden">
-    <div class="section-header">
-        <h2>Patiëntendossiers & Recepten</h2>
-        <p>Beheer medische gegevens en schrijf medicatie voor.</p>
-    </div>
-
-    <div class="split-view">
-        <div class="content-box form-box">
-            <h3>Nieuw Recept Uitschrijven</h3>
-            <form id="recipe-form" onsubmit="event.preventDefault(); alert('Recept succesvol verzonden naar de apotheek!'); this.reset();">
-                <div class="form-group">
-                    <label for="recipe-patient">Patiënt Selecteren</label>
-                    <select id="recipe-patient" required>
-                        <option value="lisa">Lisa (ID: #49202)</option>
-                        <option value="devries">J. De Vries (ID: #48101)</option>
-                        <option value="somopawiro">R. Somopawiro (ID: #47302)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="recipe-med">Medicatie</label>
-                    <input type="text" id="recipe-med" placeholder="Bijv. Paracetamol 500mg" required>
-                </div>
-                <div class="form-group">
-                    <label for="recipe-usage">Dosering & Gebruik</label>
-                    <textarea id="recipe-usage" rows="3" placeholder="Bijv. 3 daags 1-2 tabletten voor 5 dagen" required></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Recept Verzenden</button>
-            </form>
-        </div>
-
-        <div class="content-box active-dossier">
-            <h3>Actief Dossier: Lisa</h3>
-            <div class="dossier-summary">
-                <p><strong>Geboortedatum:</strong> 14-08-1994</p>
-                <p><strong>Diagnose:</strong> Chronische spanningshoofdpijn</p>
-                <p><strong>Allergieën:</strong> Geen bekend</p>
-                <hr>
-                <h4>Medicatie Historie</h4>
-                <ul>
-                    <li>Ibuporfen 400mg (Stopgezet)</li>
-                    <li>Amitriptyline 10mg (Actueel sinds vorige week)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="view-beheer" class="view-section class-hidden">
-    <div class="section-header">
-        <h2>Poli & Arts Beheer</h2>
-        <p>Beheerderspaneel voor de instellingen van Polimed.</p>
-    </div>
-
-    <div class="management-grid">
-        <div class="content-box">
-            <h3>Polikliniek Status</h3>
-            <div class="status-toggle-box">
-                <p>Huidige status: <span class="badge badge-done">Geopend</span></p>
-                <p><strong>Locatie:</strong> Paramaribo, Suriname</p>
-                <p><strong>Openingstijden:</strong> 07:00 - 15:00 uur</p>
-            </div>
-        </div>
-
-        <div class="content-box">
-            <h3>Nieuwe Arts / Specialist Registreren</h3>
-            <form onsubmit="event.preventDefault(); alert('Nieuwe specialist succesvol toegevoegd aan het Polimed systeem!'); this.reset();">
-                <div class="form-group">
-                    <label>Volledige Naam</label>
-                    <input type="text" placeholder="Bijv. Dr. S. Radhakishun" required>
-                </div>
-                <div class="form-group">
-                    <label>Specialisme</label>
-                    <input type="text" placeholder="Bijv. Dermatologie" required>
-                </div>
-                <button type="submit" class="btn-submit">Specialist Toevoegen</button>
-            </form>
-        </div>
-    </div>
-</section>
-    </main>
 
     <script src="script.js"></script>
     <script src="chat.js"></script>

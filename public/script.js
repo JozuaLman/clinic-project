@@ -1,114 +1,107 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Globale statusvariabele voor de actieve rol
+let currentRole = ''; 
+
+// 1. Inlog Systeem Logica
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    // 1. Elementen selecteren
-    const menuToggleBtn = document.getElementById('menu-toggle-btn');
-    const dropdownMenu = document.getElementById('dropdown-menu');
-    
-    const navDash = document.getElementById('nav-dash');
-    const navAfspraak = document.getElementById('nav-afspraak');
-    const navChat = document.getElementById('nav-chat');
-    const navRecepten = document.getElementById('nav-recepten');
-    
-    // Login Elementen
-    const loginForm = document.getElementById('login-form');
-    const loginSection = document.getElementById('view-login');
-    const mainHeader = document.getElementById('main-header');
-    const mainContent = document.getElementById('main-content');
-    const btnLogout = document.getElementById('btn-logout');
+    const userInvoer = document.getElementById('login-username').value.trim().toLowerCase();
+    const wachtwoordInvoer = document.getElementById('login-password').value;
+    const errorMelding = document.getElementById('login-error-message');
 
-    // 2. Toggle Menu functionaliteit
-    if (menuToggleBtn && dropdownMenu) {
-        menuToggleBtn.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('class-hidden');
-        });
-    }
-
-    // 3. Schermen Switch Functie
-    function switchView(targetViewId) {
-        const allViews = document.querySelectorAll('.view-section');
-        allViews.forEach(view => {
-            view.classList.add('class-hidden');
-        });
-
-        const targetView = document.getElementById(targetViewId);
-        if (targetView) {
-            targetView.classList.remove('class-hidden');
-        }
-
-        if (dropdownMenu) {
-            dropdownMenu.classList.add('class-hidden');
-        }
-    }
-    window.switchView = switchView;
-
-function showMenuFor(role) {
-    const menu = document.getElementById('dropdown-menu');
-    
-   if (role === 'arts') {
-            menu.innerHTML = `
-                <button onclick="switchView('view-arts-dashboard')">Dashboard</button>
-                <button onclick="switchView('view-afspraken-lijst')">Afsprakenlijst</button>
-                <button onclick="switchView('view-dossiers-recepten')">Dossiers & Recepten</button>
-                <button onclick="switchView('view-chat')">PoliMed AI CoPilot</button>
-                <button onclick="switchView('view-beheer')">Poli & Arts Beheer</button>
-                <hr>
-                <button onclick="logout()">Uitloggen</button>
-            `;
-        
+    // Controleer de inloggegevens (eenvoudige frontend check voor demo)
+    if (userInvoer === 'lisa' && wachtwoordInvoer === '123') {
+        currentRole = 'patient';
+        startSessie('view-patient-dashboard');
+    } else if (userInvoer === 'dr_ramdin' && wachtwoordInvoer === '123') {
+        currentRole = 'arts';
+        startSessie('view-arts-dashboard');
     } else {
-        menu.innerHTML = `
-            <button onclick="switchView('view-dashboard')">Mijn Dossier</button>
-            <button onclick="switchView('view-afspraak')">Nieuwe Afspraak</button>
-            <button onclick="switchView('view-chat')">PoliMed AI CoPilots</button>
-            <hr>
-            <button onclick="logout()">Uitloggen</button>
-        `;
+        // Toon foutmelding bij verkeerde inlog
+        errorMelding.classList.remove('class-hidden');
+    }
+});
+
+function startSessie(startView) {
+    // Verberg het inlogscherm en toon de hoofdapplicatie container
+    document.getElementById('view-login').classList.add('class-hidden');
+    document.getElementById('app-container').classList.remove('class-hidden');
+    
+    // Reset eventuele foutmeldingen
+    document.getElementById('login-error-message').classList.add('class-hidden');
+    
+    // Open direct het juiste start-dashboard
+    switchView(startView);
+}
+
+// 2. Schakelen Tussen Schermen (Views)
+function switchView(viewId) {
+    const sections = document.querySelectorAll('.view-section');
+    sections.forEach(section => {
+        section.classList.add('class-hidden');
+    });
+
+    const targetSection = document.getElementById(viewId);
+    if (targetSection) {
+        targetSection.classList.remove('class-hidden');
+    }
+
+    // Sluit het dropdown menu na het inklikken van een optie
+    document.getElementById('dropdown-menu').classList.add('class-hidden');
+}
+
+// 3. Dynamisch Dropdown Menu Genereren
+function toggleMenu() {
+    const menu = document.getElementById('dropdown-menu');
+    menu.classList.toggle('class-hidden');
+
+    if (!menu.classList.contains('class-hidden')) {
+        let menuHTML = '';
+        if (currentRole === 'patient') {
+            menuHTML = `
+                <button onclick="switchView('view-patient-dashboard')">📊 Dashboard</button>
+                <button onclick="switchView('view-patient-afspraken')">📅 Afspraak Boeken</button>
+                <button onclick="switchView('view-chat')">🤖 PoliMed AI Assistent</button>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <button onclick="logout()" style="color: red;">Uitloggen</button>
+            `;
+        } else if (currentRole === 'arts') {
+            menuHTML = `
+                <button onclick="switchView('view-arts-dashboard')">📊 Medisch Dashboard</button>
+                <button onclick="switchView('view-arts-binnenkomend')">🔔 Binnenkomende Afspraken</button>
+                <button onclick="switchView('view-arts-recepten')">💊 Recept & Dossier</button>
+                <button onclick="switchView('view-arts-beheer')">⚙️ Poli & Arts Beheer</button>
+                <button onclick="switchView('view-chat')">🤖 PoliMed Admin CoPilot</button>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <button onclick="logout()" style="color: red;">Uitloggen</button>
+            `;
+        }
+        menu.innerHTML = menuHTML;
     }
 }
 
-    // 4. Werkende Login Handler
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Voorkom dat de pagina herlaadt
+// 4. Notificatie Dropdown (Bel)
+function toggleNotifications() {
+    const drop = document.getElementById('notification-dropdown');
+    drop.classList.toggle('class-hidden');
+    document.getElementById('bell-badge-count').textContent = '0';
+}
 
-            // Haal het e-mailadres op dat is ingevuld
-            const email = document.getElementById('login-email').value;
+// 5. Uitloggen Functionaliteit
+function logout() {
+    currentRole = '';
+    document.getElementById('login-form').reset();
+    document.getElementById('app-container').classList.add('class-hidden');
+    document.getElementById('view-login').classList.remove('class-hidden');
+    document.getElementById('dropdown-menu').classList.add('class-hidden');
+}
 
-            // Controleer of de gebruiker een arts is
-            if (email.includes('arts')) {
-                showMenuFor('arts'); // Bouw het artsen-menu
-                switchView('view-arts-dashboard'); // Open het artsen-dashboard
-            } else {
-                showMenuFor('patient'); // Bouw het patiënten-menu
-                switchView('view-dashboard'); // Open het patiënten-dashboard
-            }
-
-            // Toon de rest van de applicatie
-            loginSection.classList.add('class-hidden');
-            mainHeader.classList.remove('class-hidden');
-            mainContent.classList.remove('class-hidden');
-        });
+// Sluit popups zodra de gebruiker buiten het menu klikt
+window.addEventListener('click', function(e) {
+    if (!e.target.matches('.menu-trigger-btn') && !e.target.closest('.dropdown-menu-wrapper')) {
+        document.getElementById('dropdown-menu').classList.add('class-hidden');
     }
-    // 5. Uitloggen Handler
-    // 5. Uitloggen Handler
-    function logout() {
-        mainHeader.classList.add('class-hidden');    // Verberg navbar
-        mainContent.classList.add('class-hidden');   // Verberg content
-        loginSection.classList.remove('class-hidden'); // Toon inlogscherm weer
-        
-        if (loginForm) loginForm.reset();             // Maak invoervelden leeg
+    if (!e.target.closest('.notification-container')) {
+        document.getElementById('notification-dropdown').classList.add('class-hidden');
     }
-    window.logout = logout; // Maak uitloggen overal beschikbaar
-
-    // Zorg dat de fysieke uitlogknop (als die er is) deze functie ook aanroept
-    if (btnLogout) {
-        btnLogout.addEventListener('click', logout);
-    }
-
-    // 6. Navigatie Event Listeners
-    if (navDash) navDash.addEventListener('click', () => switchView('view-dashboard'));
-    if (navAfspraak) navAfspraak.addEventListener('click', () => switchView('view-afspraak'));
-    if (navChat) navChat.addEventListener('click', () => switchView('view-chat'));
-    if (navRecepten) navRecepten.addEventListener('click', () => switchView('view-recepten'));
-
 });

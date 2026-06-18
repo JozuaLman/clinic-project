@@ -117,25 +117,26 @@
                     <form id="appointment-form" onsubmit="event.preventDefault(); alert('Afspraak succesvol aangevraagd!');">
                         <div class="form-group">
                             <label>Kies Medische Poli (Afdeling)</label>
-                            <select required>
+                            <select id="appointment-poli-select" required>
                                 <option value="">-- Selecteer een poli --</option>
-                                <option value="huisarts">Huisarts / Algemene Geneeskunde</option>
+
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Kies Arts / Specialist</label>
-                            <select required>
+                            <select id="appointment-doctor-select" required>
                                 <option value="">-- Selecteer een specialist --</option>
-                                <option value="ramdin">Dr. Amrita Ramdin</option>
+                               
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Kies Datum</label>
-                            <input type="date" required>
+                            <input type="date" id="appointment-date" required>
                         </div>
                         <div class="form-group">
                             <label>Reden van Bezoek & Symptomen</label>
-                            <textarea rows="4" placeholder="Beschrijf hier kort uw klachten..." required></textarea>
+                            <textarea id="appointment-reason" rows="4" placeholder="Beschrijf hier kort uw klachten..." required></textarea>
                         </div>
                         <button type="submit" class="btn-primary">Afspraak Bevestigen</button>
                     </form>
@@ -204,19 +205,9 @@
                                 <th>Actie / Beslissing</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Lisa Patiënt</strong></td>
-                                <td>17 juni 2026 om 09:30</td>
-                                <td>"Lichte symptomen van vermoeidheid en spanningshoofdpijn."</td>
-                                <td>
-                                    <div class="action-btn-group">
-                                        <button class="btn-table btn-approve" onclick="alert('Afspraak succesvol goedgekeurd!')">✓ Goedkeuren</button>
-                                        <button class="btn-table btn-reject" onclick="alert('Afspraak geweigerd.')">✕ Weigeren</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                       <tbody id="doctor-appointments-table">
+                        
+                       </tbody>
                     </table>
                 </div>
             </section>

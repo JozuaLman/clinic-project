@@ -9,33 +9,21 @@ const router = express.Router();
 // ==========================================================================
 // 1. AFSPRAAK MAKEN (POST) - Patiënt dient een afspraak in
 // ==========================================================================
-router.post('/create', async (req, res) => {
-    const { patient_id, dokter_id, appointment_date, appointment_time, reason } = req.body;
-
-    if (!patient_id || !dokter_id || !appointment_date || !appointment_time || !reason) {
-        return res.status(400).json({ message: 'Alle verplichte velden zijn niet ingevuld.' });
-    }
-
+router.post('/create', authMiddleware, async (req, res) => {
     try {
-        const sql = `
-            INSERT INTO afspraken (patient_id, dokter_id, appointment_date, appointment_time, reason, appointment_status) 
-            VALUES (?, ?, ?, ?, ?, 'pending')
-        `;
+        const patient_id = req.user.id;
+        const { dokter_id, appointment_date, appointment_time, reason } = req.body;
+
+        const query = `INSERT INTO appointments (patient_id, dokter_id, appointment_date, appointment_time, reason, appointment_status) VALUES (?, ?, ?, ?, ?, 'pending')`;
         
-        // Let op: we gebruiken pool.query met await, zonder callback-functie erin!
-        const [result] = await pool.query(sql, [patient_id, dokter_id, appointment_date, appointment_time, reason]);
+        await pool.query(query, [patient_id, dokter_id, appointment_date, appointment_time, reason]);
 
-        return res.status(201).json({ 
-            message: 'Afspraak succesvol aangevraagd!', 
-            appointment_id: result.insertId 
-        });
-
-    } catch (err) {
-        console.error('Database fout bij aanmaken afspraak:', err);
-        return res.status(500).json({ message: 'Database fout', error: err.message });
+        res.status(201).json({ message: 'Afspraak succesvol aangemaakt!' });
+    } catch (error) {
+        console.error("FOUT IN APPOINTMENTS.JS:", error);
+        res.status(500).json({ message: 'Interne serverfout' });
     }
 });
-
 // ==========================================================================
 // 2. AFSPRAKEN OPHALEN VOOR PATIËNT (GET) - Inclusief live telling!
 // ==========================================================================
@@ -45,7 +33,7 @@ router.get('/patient/:id', async (req, res) => {
     try {
         const sql = `
             SELECT a.*, d.dokter_naam, d.specialty, d.policlinic_name 
-            FROM afspraken a
+            FROM appointments a
             JOIN dokters d ON a.dokter_id = d.dokter_id
             WHERE a.patient_id = ?
             ORDER BY a.appointment_date DESC, a.appointment_time DESC
@@ -55,12 +43,12 @@ router.get('/patient/:id', async (req, res) => {
 
         return res.status(200).json({
             bericht: 'Succesvol',
-            aantal_afspraken: results.length,
+            aantal_appointments: results.length,
             appointments: results
         });
 
     } catch (err) {
-        console.error('Fout bij ophalen van afspraken:', err);
+        console.error('Fout bij ophalen van appointments:', err);
         return res.status(500).json({ message: 'Interne serverfout', error: err.message });
     }
 });
@@ -98,7 +86,7 @@ router.put('/update/:id', async (req, res) => {
 
     try {
         const sql = `
-            UPDATE afspraken 
+            UPDATE appointments 
             SET appointment_status = ?, doctor_notes = ? 
             WHERE appointment_id = ?
         `;

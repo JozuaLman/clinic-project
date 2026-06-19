@@ -217,7 +217,7 @@ if (appointmentForm) {
     }
 
     const appointmentData = {
-        patient_id: patientId,
+        
         dokter_id: doctorId,
         appointment_date: appointmentDate,
         appointment_time: appointmentTime,

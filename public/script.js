@@ -72,39 +72,39 @@ if (currentRole === 'patient') {
 // ==========================================================================
 function loadDoctorsIntoForm() {
     const doctorSelect = document.getElementById('appointment-doctor-select');
-    const poliSelect = document.getElementById('appointment-poli-select');
 
-    if (!doctorSelect || !poliSelect) return;
+
+   if (!doctorSelect) return;
 
     // Vraag alle dokters op via onze backend route
-    fetch('/api/dokters/all')
-        .then(res => res.json())
-        .then(dokters => {
+   const token = localStorage.getItem('token');
+
+   fetch('/api/appointments/dokters-lijst', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Server gaf een foutmeding');
+        return res.json();
+    })
+    .then(dokters => {
+        console.log("De dokters die binnenkomen in de frontend:", dokters);
             // Maak de dropdowns eerst leeg (behalve de eerste standaardoptie)
             doctorSelect.innerHTML = '<option value="">-- Selecteer een specialist --</option>';
-            poliSelect.innerHTML = '<option value="">-- Selecteer een poli --</option>';
+         
 
-            // Handige sets om dubbele poli-namen te voorkomen in de poli-dropdown
-            const uniekePolis = new Set();
-
-            dokters.forEach(dokter => {
-                // 1. Voeg de dokter toe aan de artsen-dropdown
-                // We zetten het dokter_id in de 'value', zodat de database straks weet welke dokter het is!
-                const docOption = document.createElement('option');
-                docOption.value = dokter.dokter_id; 
-                docOption.textContent = `Dr. ${dokter.dokter_naam} (${dokter.specialty})`;
-                doctorSelect.appendChild(docOption);
-
-                // 2. Voeg de poli toe aan de poli-dropdown (als deze er nog niet in zit)
-                if (!uniekePolis.has(dokter.policlinic_name)) {
-                    uniekePolis.add(dokter.policlinic_name);
-                    const poliOption = document.createElement('option');
-                    poliOption.value = dokter.policlinic_name;
-                    poliOption.textContent = dokter.policlinic_name;
-                    poliSelect.appendChild(poliOption);
-                }
-            });
-        })
+ dokters.forEach(dokter => {
+            const docOption = document.createElement('option');
+            docOption.value = dokter.dokter_id;
+            docOption.textContent = `Dr. ${dokter.dokter_naam} (${dokter.specialty})`;
+            doctorSelect.appendChild(docOption);
+        });
+    })
+            
+        
         .catch(err => console.error('Fout bij het laden van de dokters:', err));
 }
 

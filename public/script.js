@@ -22,7 +22,8 @@ const errorMsg = document.getElementById('login-error-message');
             currentRole = data.role;
             
             // Sla de unieke ID van de ingelogde persoon op voor later gebruik bij afspraken
-            localStorage.setItem('userId', data.user.id); 
+            localStorage.setItem('userId', data.user.id);
+            localStorage.setItem('userRole', data.user.id); 
 
             if (data.token) {
                 localStorage.setItem('token', data.token);
@@ -289,4 +290,96 @@ function loadDoctorAppointments() {
         console.error('Fout bij het ophalen van artsenafspraken: ', err);
         tableBody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Fout bij laden van gegevens uit database.</td></tr>';
     });
+}
+
+// ==========================================================================
+// AFSPRAAK VERSTUREN VANUIT DE FRONTEND
+// ==========================================================================
+const appointmentForm = document.getElementById('appointment-form');
+
+if (appointmentForm) {
+    appointmentForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Voorkom dat de pagina ongewenst herlaadt
+
+        // 1. Grijp alle ingevulde waarden uit jouw HTML select en input ID's
+        const dokter_id = document.getElementById('appointment-doctor-select').value;
+        const appointment_date = document.getElementById('appointment-date').value;
+        const appointment_time = document.getElementById('appointment-time').value;
+        const reason = document.getElementById('appointment-reason').value;
+
+        // 2. Haal de ID van de ingelogde patiënt op uit de localStorage
+        // Zorg dat je bij een succesvolle login de patient_id opslaat als: localStorage.setItem('userId', user.id)
+        const patient_id = localStorage.getItem('userId'); 
+
+        if (!patient_id) {
+            alert("Je sessie is verlopen of je bent niet ingelogd als patiënt. Log opnieuw in.");
+            return;
+        }
+
+        // 3. Stuur de data door naar de stabiele async/await backend route
+        try {
+            const response = await fetch('/api/appointments/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    patient_id,
+                    dokter_id,
+                    appointment_date,
+                    appointment_time,
+                    reason
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Afspraak succesvol ingediend bij de poli!');
+                appointmentForm.reset(); // Maak het formulier weer helemaal leeg
+            } else {
+                alert('Foutmelding: ' + data.message);
+            }
+
+        } catch (error) {
+            console.error('Frontend error tijdens aanmaken afspraak:', error);
+            alert('Kon geen verbinding maken met de server.');
+        }
+    });
+}
+
+// ==========================================================================
+// AUTOMATISCH DOKTERS INLADEN IN HET FORMULIER
+// ==========================================================================
+async function loadDoctorsIntoForm() {
+    const doctorSelect = document.getElementById('appointment-doctor-select');
+    
+    if (!doctorSelect) return; // Als we niet op het juiste scherm zijn, doe niks
+
+    try {
+        const response = await fetch('/api/appointments/dokters-lijst', {
+    method: 'GET',
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+    }
+});
+const dokters = await response.json();
+        if (response.ok) {
+            // Maak de dropdown eerst leeg, behalve de eerste placeholder optie
+            doctorSelect.innerHTML = '<option value="">-- Selecteer een specialist --</option>';
+
+            // Loop door alle dokters uit de database en maak een <option> tag voor ze
+            dokters.forEach(dokter => {
+                const option = document.createElement('option');
+                option.value = dokter.dokter_id; // De database ID sturen we mee naar de backend
+                option.textContent = `Dr. ${dokter.dokter_naam} (${dokter.specialty})`; // Dit ziet de patiënt
+                doctorSelect.appendChild(option);
+            });
+        } else {
+            console.error('Fout bij laden dokters:', dokters.message);
+        }
+    } catch (error) {
+        console.error('Kon geen verbinding maken om dokters te laden:', error);
+    }
 }

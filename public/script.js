@@ -19,7 +19,7 @@ const errorMsg = document.getElementById('login-error-message');
     .then(data => {
         if (data.role) {
             // Succesvol ingelogd! De backend geeft ons de rol ('patient' of 'arts')
-            currentUser = data.role;
+            currentRole = data.role;
             
             // Sla de unieke ID van de ingelogde persoon op voor later gebruik bij afspraken
             localStorage.setItem('userId', data.user.id); 
@@ -29,15 +29,15 @@ const errorMsg = document.getElementById('login-error-message');
             }
 
             // Bepaal het startscherm op basis van de rol
-            let startView = (currentUser === 'patient') ? 'view-patient-dashboard' : 'view-arts-dashboard';
+            let startView = (currentRole === 'patient') ? 'view-patient-dashboard' : 'view-arts-dashboard';
             
             // Start de sessie (haalt loginsscherm weg, etc.) via jouw bestaande functie
             startSessie(startView);
 
             // Als het een patiënt is, laden we de dokters. Als het een arts is, de consulten!
-if (currentUser === 'patient') {
+if (currentRole === 'patient') {
     loadDoctorsIntoForm();
-} else if (currentUser === 'arts') {
+} else if (currentRole === 'arts') {
     loadDoctorAppointments();
 }
         } else {

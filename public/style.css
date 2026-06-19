@@ -169,12 +169,13 @@ body {
 /* Menu Dropdown */
 .menu-trigger-btn {
     background-color: var(--primary-color);
-    color: white;
+    color: rgb(255, 255, 255);
     border: none;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
+    
 }
 
 .dropdown-content {
@@ -189,6 +190,8 @@ body {
     display: flex;
     flex-direction: column;
     width: 220px;
+    min-height: 50px; /* Geef het een minimale hoogte */
+    
 }
 
 .dropdown-content button {
@@ -204,7 +207,9 @@ body {
 
 .dropdown-content button:hover {
     background-color: var(--bg-light);
+
 }
+
 
 /* ==========================================================================
    4. CONTENT LAYOUT BLOKKEN & GRIDS

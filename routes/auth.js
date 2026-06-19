@@ -1,6 +1,7 @@
 
 import express from 'express';
 import pool from '../config/db.js'; // Hiermee praat deze route met HeidiSQL
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -58,6 +59,11 @@ router.post('/login', async (req, res) => {
 
             // Wachtwoord controle
             if (patient.patient_password === password || patient.password === password) {
+               const token = jwt.sign(
+    { id: patient.patient_id, role: 'patient' }, 
+    process.env.JWT_SECRET, 
+    { expiresIn: '1h' });
+               
                 return res.status(200).json({
                     role: 'patient',
                     message: 'Inloggen succesvol als patiënt!',
@@ -82,6 +88,11 @@ router.post('/login', async (req, res) => {
             const dbPassword = dokter.dokter_password || dokter.password;
 
             if (dbPassword === password) {
+                const token = jwt.sign(
+                    { id: dokter.dokter_id, role: 'dokter' }, // 'dokter' i.p.v. 'doctor'
+    process.env.JWT_SECRET, 
+    { expiresIn: '1h' });
+                
                 return res.status(200).json({
                     role: 'arts',
                     message: 'Inloggen succesvol als arts!',

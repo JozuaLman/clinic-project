@@ -24,11 +24,15 @@ const errorMsg = document.getElementById('login-error-message');
             // Sla de unieke ID van de ingelogde persoon op voor later gebruik bij afspraken
             localStorage.setItem('userId', data.user.id); 
 
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+
             // Bepaal het startscherm op basis van de rol
             let startView = (currentUser === 'patient') ? 'view-patient-dashboard' : 'view-arts-dashboard';
             
             // Start de sessie (haalt loginsscherm weg, etc.) via jouw bestaande functie
-            startSession(startView);
+            startSessie(startView);
 
             // Als het een patiënt is, laden we de dokters. Als het een arts is, de consulten!
 if (currentUser === 'patient') {
@@ -180,63 +184,54 @@ window.addEventListener('click', function(e) {
 const appointmentForm = document.getElementById('appointment-form');
 if (appointmentForm) {
     // We halen eerst de oude inline onsubmit alert weg die we in de HTML zagen
-    appointmentForm.removeAttribute('onsubmit'); 
+   appointmentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    appointmentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Haal de opgeslagen patiënt ID op
+    const patientId = localStorage.getItem('userId');
 
-        // Haal de opgeslagen patiënt ID op die we tijdens het inloggen in localStorage hebben gezet
-        const patientId = localStorage.getItem('userId'); 
-        
-        // Grijp alle ingevulde waarden uit het formulier
-        const doctorId = document.getElementById('appointment-doctor-select').value;
-        const appointmentDate = document.getElementById('appointment-date').value;
-        const reason = document.getElementById('appointment-reason').value;
-        
-        // Voor een simpel poliklinisch systeem kunnen we de tijd bijvoorbeeld standaard op 08:00 zetten, 
-        // of je kunt later nog een tijd-input toevoegen als je dat wil!
-        const appointmentTime = "08:00:00"; 
+    // Haal waarden uit het formulier
+    const doctorId = document.getElementById('appointment-doctor-select').value;
+    const appointmentDate = document.getElementById('appointment-date').value;
+    const appointmentReason = document.getElementById('appointment-reason').value;
 
-        // Controleer of er wel een dokter is gekozen
-        if (!doctorId) {
-            alert('Selecteer aub eerst een arts.');
-            return;
+    const appointmentTime = '08:00:00';
+
+    if (!doctorId) {
+        alert('Selecteer aub eerst een arts.');
+        return;
+    }
+
+    const appointmentData = {
+        patient_id: patientId,
+        dokter_id: doctorId,
+        appointment_date: appointmentDate,
+        appointment_time: appointmentTime,
+        reason: appointmentReason
+    };
+
+    fetch('/api/appointments/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(appointmentData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.appointment_id) {
+            alert('Afspraak succesvol opgeslagen in de database!');
+            appointmentForm.reset();
+        } else {
+            alert('Fout bij het aanvragen: ' + data.message);
         }
-
-        // Maak het pakketje data klaar voor de backend
-        const appointmentData = {
-            patient_id: patientId,
-            dokter_id: doctorId,
-            appointment_date: appointmentDate,
-            appointment_time: appointmentTime,
-            reason: reason
-        };
-
-        // Stuur de data met fetch naar onze Express route
-        fetch('/api/appointments/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(appointmentData)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.appointment_id) {
-                alert('Afspraak succesvol opgeslagen in de database!');
-                appointmentForm.reset(); // Maakt het formulier weer leeg
-                
-                // Optioneel: Schakel direct terug naar het patiëntendashboard
-                if (typeof switchView === 'function') {
-                    switchView('view-patient-dashboard');
-                }
-            } else {
-                alert('Fout bij het aanvragen: ' + data.message);
-            }
-        })
-        .catch(err => {
-            console.error('Netwerkfout bij afspraak maken:', err);
-            alert('Er is een serverfout opgetreden bij het verzenden.');
-        });
+    })
+    .catch(err => {
+        console.error('Netwerkfout bij afspraak maken:', err);
+        alert('Er is een serverfout opgetreden bij het verzenden.');
     });
+});
 }
 
 // ==========================================================================
@@ -289,9 +284,9 @@ function loadDoctorAppointments() {
 
                 tableBody.appendChild(row);
             });
-        })
-        .catch(err => {
-            console.error('Fout bij het ophalen van artsenafspraken:', err);
-            tableBody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Fout bij laden van gegevens uit database.</td></tr>';
-        });
+       })
+    .catch(err => {
+        console.error('Fout bij het ophalen van artsenafspraken: ', err);
+        tableBody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Fout bij laden van gegevens uit database.</td></tr>';
+    });
 }

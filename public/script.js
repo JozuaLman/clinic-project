@@ -1,5 +1,17 @@
 // Globale statusvariabele voor de actieve rol
 let currentRole = ''; 
+// --- UNIVERSELE FETCH FUNCTIE ---
+async function secureFetch(url, options = {}) {
+    const token = localStorage.getItem('token');
+    
+    options.headers = { 
+        ...options.headers, 
+        'Authorization': `Bearer ${token}`, 
+        'Content-Type': 'application/json' 
+    };
+
+    return await fetch(url, options); 
+}
 
 // 1. Inlog Systeem (Aangepast voor echte Database!)
 document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -27,6 +39,7 @@ const errorMsg = document.getElementById('login-error-message');
 
             if (data.token) {
                 localStorage.setItem('token', data.token);
+             
             }
 
             // Bepaal het startscherm op basis van de rol
@@ -244,6 +257,7 @@ function loadDoctorAppointments() {
 
     // Haal de unieke ID van de ingelogde arts op uit de localStorage
     const doctorId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
     if (!doctorId) {
         console.error('Geen arts ID gevonden in de sessie.');
@@ -251,129 +265,86 @@ function loadDoctorAppointments() {
     }
 
     // Vraag de specifieke afspraken van deze arts op bij de backend
-    fetch(`/api/appointments/doctor/${doctorId}`)
-        .then(res => res.json())
-        .then(appointments => {
-            // Maak de tabel eerst helemaal leeg
-            tableBody.innerHTML = '';
+    fetch(`/api/appointments/dokter/${doctorId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Server gaf een foutmelding');
+        return res.json();
+    })
+    .then(appointments => {
+        // Maak de tabel eerst helemaal leeg
+        tableBody.innerHTML = '';
 
-            if (appointments.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">U heeft momenteel geen binnenkomende consulten.</td></tr>';
-                return;
-            }
+        // Pak de array veilig uit de response
+        const appointmentsArray = Array.isArray(appointments) ? appointments : (appointments.appointments || []);
 
-            // Loop door alle afspraken heen en bouw de tabelrijen
-            appointments.forEach(app => {
-                const row = document.createElement('tr');
+        if (appointmentsArray.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">U heeft momenteel geen binnenkomende consulten.</td></tr>';
+            return;
+        }
 
-                // Zet de datum om naar een net formaat (DD-MM-YYYY)
-                const formattedDate = new Date(app.appointment_date).toLocaleDateString('nl-NL');
-                // Pak de uren en minuten (08:00:00 -> 08:00)
-                const formattedTime = app.appointment_time ? app.appointment_time.substring(0, 5) : '08:00';
+        // Loop door alle afspraken heen en bouw de tabelrijen
+        appointmentsArray.forEach(app => {
+            const row = document.createElement('tr');
 
-                row.innerHTML = `
-                    <td><strong>${app.patient_naam || 'Onbekende Patiënt'}</strong></td>
-                    <td>${formattedDate} om ${formattedTime}u</td>
-                    <td>${app.reason || 'Geen klachten ingevuld.'}</td>
-                    <td>
-                        <div class="action-btn-group">
-                            <button class="btn-table btn-approve" onclick="alert('Afspraak goedgekeurd!')">✓ Goedkeuren</button>
-                            <button class="btn-table btn-reject" onclick="alert('Afspraak geweigerd.')">✕ Weigeren</button>
-                        </div>
-                    </td>
-                `;
+            // Zet de datum om naar een net formaat (DD-MM-YYYY)
+            const formattedDate = new Date(app.appointment_date).toLocaleDateString('nl-NL');
+            // Pak de uren en minuten
+            const formattedTime = app.appointment_time ? app.appointment_time.substring(0, 5) : '08:00';
 
-                tableBody.appendChild(row);
-            });
-       })
+            row.innerHTML = `
+                <td><strong>${app.patient_naam || 'Onbekende Patiënt'}</strong></td>
+                <td>${formattedDate} om ${formattedTime} u</td>
+                <td>${app.reason || 'Geen klachten ingevuld.'}</td>
+                <td>
+                    <div class="action-btn-group">
+                        <button class="btn-table btn-approve" onclick="alert('Afspraak goedgekeurd!')">✓ Goedkeuren</button>
+                        <button class="btn-table btn-reject" onclick="alert('Afspraak geweigerd.')">✕ Weigeren</button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    })
     .catch(err => {
-        console.error('Fout bij het ophalen van artsenafspraken: ', err);
+        console.error('Fout bij het ophalen van artsenafspraken:', err);
         tableBody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Fout bij laden van gegevens uit database.</td></tr>';
     });
 }
 
 // ==========================================================================
-// AFSPRAAK VERSTUREN VANUIT DE FRONTEND
-// ==========================================================================
-const appointmentForm = document.getElementById('appointment-form');
-
-if (appointmentForm) {
-    appointmentForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Voorkom dat de pagina ongewenst herlaadt
-
-        // 1. Grijp alle ingevulde waarden uit jouw HTML select en input ID's
-        const dokter_id = document.getElementById('appointment-doctor-select').value;
-        const appointment_date = document.getElementById('appointment-date').value;
-        const appointment_time = document.getElementById('appointment-time').value;
-        const reason = document.getElementById('appointment-reason').value;
-
-        // 2. Haal de ID van de ingelogde patiënt op uit de localStorage
-        // Zorg dat je bij een succesvolle login de patient_id opslaat als: localStorage.setItem('userId', user.id)
-        const patient_id = localStorage.getItem('userId'); 
-
-        if (!patient_id) {
-            alert("Je sessie is verlopen of je bent niet ingelogd als patiënt. Log opnieuw in.");
-            return;
-        }
-
-        // 3. Stuur de data door naar de stabiele async/await backend route
-        try {
-            const response = await fetch('/api/appointments/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    patient_id,
-                    dokter_id,
-                    appointment_date,
-                    appointment_time,
-                    reason
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert('Afspraak succesvol ingediend bij de poli!');
-                appointmentForm.reset(); // Maak het formulier weer helemaal leeg
-            } else {
-                alert('Foutmelding: ' + data.message);
-            }
-
-        } catch (error) {
-            console.error('Frontend error tijdens aanmaken afspraak:', error);
-            alert('Kon geen verbinding maken met de server.');
-        }
-    });
-}
-
-// ==========================================================================
-// AUTOMATISCH DOKTERS INLADEN IN HET FORMULIER
+// AUTOMATISCH DOKTERS INLADEN IN HET FORMULIER (PATIËNT DASHBOARD)
 // ==========================================================================
 async function loadDoctorsIntoForm() {
     const doctorSelect = document.getElementById('appointment-doctor-select');
-    
-    if (!doctorSelect) return; // Als we niet op het juiste scherm zijn, doe niks
+    if (!doctorSelect) return;
 
-    try {
-        const response = await fetch('/api/appointments/dokters-lijst', {
-    method: 'GET',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-    }
-});
-const dokters = await response.json();
+   try {
+    // Haal de beveiligingstoken op uit de localStorage
+    const token = localStorage.getItem('token');
+
+    // Stuur de token netjes mee in de headers
+    const response = await fetch('/api/appointments/dokters-lijst', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+    const dokters = await response.json();
+
         if (response.ok) {
-            // Maak de dropdown eerst leeg, behalve de eerste placeholder optie
             doctorSelect.innerHTML = '<option value="">-- Selecteer een specialist --</option>';
 
-            // Loop door alle dokters uit de database en maak een <option> tag voor ze
             dokters.forEach(dokter => {
                 const option = document.createElement('option');
-                option.value = dokter.dokter_id; // De database ID sturen we mee naar de backend
-                option.textContent = `Dr. ${dokter.dokter_naam} (${dokter.specialty})`; // Dit ziet de patiënt
+                option.value = dokter.dokter_id;
+                option.textContent = `Dr. ${dokter.dokter_naam} (${dokter.specialty})`;
                 doctorSelect.appendChild(option);
             });
         } else {

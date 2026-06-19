@@ -1,9 +1,10 @@
 
 import express from 'express';
 import pool from '../config/db.js'; // Verbinding met HeidiSQL
-import authMiddleware from '../middleware/authMiddleware.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
 
 // ==========================================================================
 // 1. AFSPRAAK MAKEN (POST) - Patiënt dient een afspraak in
@@ -73,7 +74,7 @@ router.get('/dokter/:id', async (req, res) => {
     try {
         const sql = `
             SELECT a.*, p.patient_naam, p.patient_email 
-            FROM afspraken a
+            FROM appointments a
             JOIN patienten p ON a.patient_id = p.patient_id
             WHERE a.dokter_id = ?
             ORDER BY a.appointment_date ASC, a.appointment_time ASC

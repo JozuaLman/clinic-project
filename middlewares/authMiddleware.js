@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export const verifyToken = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
 
   if (!token) {
@@ -15,3 +15,4 @@ export const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: 'Ongeldige of verlopen token.' });
   }
 };
+export default authMiddleware;

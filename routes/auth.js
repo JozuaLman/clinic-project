@@ -46,6 +46,7 @@ router.post('/login', async (req, res) => {
 
     if (!username || !password) {
         return res.status(400).json({ message: 'Vul gebruikersnaam/e-mail en wachtwoord in.' });
+        
     }
 
     try {
@@ -67,6 +68,7 @@ router.post('/login', async (req, res) => {
                 return res.status(200).json({
                     role: 'patient',
                     message: 'Inloggen succesvol als patiënt!',
+                    token: token,
                     user: {
                         id: patient.patient_id,
                         name: patient.patient_naam,
@@ -96,6 +98,7 @@ router.post('/login', async (req, res) => {
                 return res.status(200).json({
                     role: 'arts',
                     message: 'Inloggen succesvol als arts!',
+                    token: token,
                     user: {
                         id: dokter.dokter_id,
                         name: dokter.dokter_naam,

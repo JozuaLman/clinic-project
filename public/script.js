@@ -14,6 +14,7 @@ async function secureFetch(url, options = {}) {
 }
 
 // 1. Inlog Systeem (Aangepast voor echte Database!)
+
 document.getElementById('login-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -303,8 +304,8 @@ function loadDoctorAppointments() {
                 <td>${app.reason || 'Geen klachten ingevuld.'}</td>
                 <td>
                     <div class="action-btn-group">
-                        <button class="btn-table btn-approve" onclick="alert('Afspraak goedgekeurd!')">✓ Goedkeuren</button>
-                        <button class="btn-table btn-reject" onclick="alert('Afspraak geweigerd.')">✕ Weigeren</button>
+                        <button class="btn-table btn-approve" onclick="updateAppointmentStatus(${app.appointment_id}, 'accepted')">✓ Goedkeuren</button>
+                        <button class="btn-table btn-reject" onclick=""updateAppointmentStatus(${app.appointment_id}, 'rejected')">✕ Weigeren</button>
                     </div>
                 </td>
             `;
@@ -354,3 +355,117 @@ async function loadDoctorsIntoForm() {
         console.error('Kon geen verbinding maken om dokters te laden:', error);
     }
 }
+
+
+// ==========================================
+// FUNCTIE 2: Status update via de knoppen
+// ==========================================
+function updateAppointmentStatus(appointmentId, status) {
+    const updateData = {
+        appointment_status: status,
+        doctor_notes: null 
+    };
+
+    fetch(`/api/appointments/update/${appointmentId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updateData)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Kon status niet bijwerken');
+        return res.json();
+    })
+    .then(data => {
+        alert(`Afspraak succesvol ${status === 'accepted' ? 'goedgekeurd' : 'geweigerd'}!`);
+        loadDoctorAppointments(); // Ververs de artsen-tabel direct
+    })
+    .catch(err => {
+        console.error('Fout bij bijwerken status:', err);
+        alert('Er is iets misgegaan bij het verwerken van de status.');
+    });
+} // <-- Dit is de sluitaccolade die er moet staan!
+
+// ==========================================
+// FUNCTIE 3: Haalt afspraken op voor de PATIËNT
+// ==========================================
+function loadPatientDashboard() {
+    const section = document.getElementById('view-patient-dashboard');
+    if (section) section.classList.remove('class-hidden');
+    
+    const patientId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    
+    // Direct naar de box kijken die we net een ID hebben gegeven
+    const listCard = document.getElementById('medische-tijdlijn-box');
+    if (!listCard || !patientId) return;
+
+    fetch(`/api/appointments/patient/${patientId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(appointments => {
+        // Leegmaken en titel zetten
+        listCard.innerHTML = '<h3><span class="stat-icon">📅</span> Mijn Medische Tijdlijn</h3>'; 
+
+        if (!appointments || appointments.length === 0) {
+            listCard.innerHTML += '<p>U heeft momenteel geen aankomende consulten.</p>';
+            return;
+        }
+
+        appointments.forEach(app => {
+            const formattedDate = new Date(app.appointment_date).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+            const formattedTime = app.appointment_time ? app.appointment_time.substring(0, 5) : '00:00';
+            
+            // Bepaal CSS classes op basis van status
+            let badgeClass = app.appointment_status === 'accepted' ? 'badge-approved' : 'badge-pending';
+            let badgeText = app.appointment_status === 'accepted' ? 'Goedgekeurd' : 'In afwachting';
+
+            // Voeg de nieuwe rij toe
+            listCard.innerHTML += `
+                <div class="timeline-item">
+                    <h4>Consult: Dr. ${app.dokter_naam || 'Arts'}</h4>
+                    <p class="timeline-date">${formattedDate} om ${formattedTime} u</p>
+                    <span class="badge ${badgeClass}">${badgeText}</span>
+                </div>
+            `;
+        });
+    })
+    .catch(err => console.error('Fout bij laden patiënt dashboard:', err));
+}
+
+// 3. EN HIERONDER STAAT JE AUTOMATISCHE OPSTARTER (Regel 399 t/m 406 op je foto)
+
+
+// Dit voert automatisch uit zodra de pagina opstart/ververst
+// Dit staat al helemaal onderaan je script.js!
+const userRole = localStorage.getItem('userRole') || localStorage.getItem('role');
+
+if (userRole === 'arts' || userRole === 'dokter') {
+    loadDoctorAppointments();
+} else if (userRole === 'patient') {
+    loadPatientDashboard();
+
+}
+
+// ... (hierboven staan al je functies zoals loadPatientDashboard, etc.)
+
+// Zorg dat alles geladen is en voer dan de check uit
+window.addEventListener('load', function() {
+    console.log("Pagina geladen, probeer dashboard te vullen...");
+    
+    // Check wie er ingelogd is
+    const userRole = localStorage.getItem('userRole') || localStorage.getItem('role');
+
+    if (userRole === 'arts' || userRole === 'dokter') {
+        loadDoctorAppointments();
+    } else if (userRole === 'patient') {
+        loadPatientDashboard();
+    }
+});
